@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<a class="btn btn-danger" href="{% url 'ticket_create' %}">demander une critique</a>
+<a class="btn btn-primary" class="btn-primary" href="{% url 'ticket_and_review' %}">créer une critique</a>
+<h2>Flux</h2>
+
+{% for ticket in tickets %}
+    <h3>{{ ticket.title }}</h3>
+    <p>{{ ticket.description }}</p>
+    <p>{{ ticket.user }}</p>
+    <p>{{ ticket.time_created }}</p>
+    
+    <hr>
+{% endfor %}
+
+
+{% endblock content %}

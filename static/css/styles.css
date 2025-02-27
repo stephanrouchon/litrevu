@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: lightgray;
+    width: 80%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.row .g5{ margin-top: 100px;}
+
+main{
+    margin-top: 100px;
+    width: 80%; 
+   
+}
+
+.form-container{
+    display: flex;
+    justify-content: center;
+}
+
+

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Abonnements</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for follow in following %}
+            <tr>
+                <td>{{ follow.followed_user.username }}</td>
+                <td>
+                    <a href="{% url 'unfollow_user' follow.followed_user.id %}" alt="Unfollow {{follow.followed_user.username}}">Se désabonner</a>
+        {% endfor %}
+
+
+</table>
+<h3>Vos abonnés :</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for follow in followers %}
+            <tr>
+                <td>{{ follow.user.username }}</td>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+
+{% endblock content %}
+

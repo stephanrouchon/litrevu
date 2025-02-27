@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    
+        <h2>Créer un ticket</h2>
+        <form method="post" enctype="multipart/form-data">
+            {{ ticket_form|crispy }}
+            {{ photo_form|crispy }}
+            {% csrf_token %}
+            <button class="btn btn-primary" type="submit">Créer</button>
+        </form>
+    
+
+{% endblock content %}
