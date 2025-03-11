@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Mes posts</h1>
+
+{% if user_posts %}
+    <section class="container">
+        {% for post in user_posts %}
+            <div class="row">
+                {% if post.title %}  
+                <div class="col-md-2">
+                    {% if post.image and post.image.image %}
+                    <img src="{{post.image.image.url }}" class="img-thumbnail" width="200" alt="">
+                    {% endif %}
+                </div>
+                    <div class="col-md-10">
+                        <p class="badge bg-primary">Vous avez demandé une critique</p>
+                        <h2> {{ post.title }}</h3>
+                        <p>{{ post.description }}</p>
+                        <p>{{ ticket.time_created }}</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                        <a class="btn btn-primary"  href="{% url 'edit_ticket' post.id %}">
+                            Modifier
+                        </a>
+                        <a class="btn btn-danger" type="dropdown-item" href="{% url 'ticket_delete' post.id %}">
+                            supprimer
+                        </a>
+                    </div>
+                    
+                
+                {% else %}  
+                    <div>
+                        <p class="badge bg-success">Vous avez publié une critique</p>
+                        <strong>{{ post.headline }}</strong> ({{ post.rating }}/5)
+                        <p>{{ post.body }}</p>
+                        <small>Créé le : {{ post.time_created }}</small>
+                        <div class="col-md-12">
+                            <a class="btn btn-primary"  href="{% url 'review_edit' post.id %}">
+                                Modifier
+                            </a>
+                            <a class="btn btn-danger" type="dropdown-item" href="{% url 'review_delete' post.id %}">
+                                supprimer
+                            </a>
+                        </div>
+                    <div class="downTicket">
+                        <div class="col-md-2"> 
+                        {% if post.ticket.image and post.ticket.image.image %}  
+                        <img src="{{ post.ticket.image.image.url}}" class="img-thumbnail" alt="">
+                        {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            <p class="badge bg-primary">{{ post.ticket.user }} a demandé une critique</p>       
+                            <p>{{ post.ticket.time_created }}</p>
+                            <strong> "{{ post.ticket.title }}"</strong>
+                            <p>{{ post.ticket.description }}</p>
+                        </div>
+
+                        
+                        
+                        
+                    </div>  
+                    
+                {% endif %}
+                
+            </div>
+            </li>
+            <hr>
+        {% endfor %}
+    </ul>
+
+    {# PAGINATION #}
+    <div class="pagination">
+        <span>
+            {% if page_obj.has_previous %}
+                {% if page_obj.previous_page_number > 1 %}
+                    <a href="?page=1"> Première </a>
+                {% endif %}
+                
+                <a href="?page={{ page_obj.previous_page_number }}"> Précédente </a>
+            {% endif %}
+
+            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+
+            {% if page_obj.has_next %}
+                
+                <a href="?page={{ page_obj.next_page_number }}">Suivante ›</a>
+                
+                {% if page_obj.next_page_number < page_obj.paginator.num_pages %}
+                <a href="?page={{ page_obj.paginator.num_pages }}"> Dernière »</a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+{% else %}
+    <p>Aucune activité enregistrée.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,40 +1,93 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Abonnements</h2>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Utilisateur</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for follow in following %}
+<h1>Gestion des Abonnements et des abonnés</h1>
+    <br>
+    <h2>S'abonner à un utilisateur</h2>
+    <br>
+    <form method="GET" action="{% url 'search_users' %}">
+        <label for="search">Rechercher un utilisateur</label>
+        <input class="form-control" id="search" type="text" name="q" placeholder="Rechercher un utilisateur..." value="{{ request.GET.q }}">
+        <button class="btn btn-primary" type="submit">Rechercher</button>
+    </form>
+
+    {% if query %}
+        <h3>Résultats de la recherche pour "{{ query }}"</h3>
+        
+        {% if users %}
+        <div class="container">
+            <div class=" row">
+                <table class="table table-striped col-md-2">
+                    {% for user in users %}
+                        <th>
+                            {{ user.username }}
+                                <a href="{% url 'follow_user' user.id %}" alt="Follow {{user.username}}">S'abonner</a>
+                        </th>
+                    {% endfor %}
+                    </table>
+            </div>
+        </div>
+        {% else %}
+            <p>Aucun utilisateur trouvé.</p>
+        {% endif %}
+    {% endif %}
+
+
+
+  <h2>Vos abonnements</h2>
+  <div class="container">
+    <div class="row">
+        <table class="table table-striped col-md-2">
+        <thead>
             <tr>
-                <td>{{ follow.followed_user.username }}</td>
-                <td>
-                    <a href="{% url 'unfollow_user' follow.followed_user.id %}" alt="Unfollow {{follow.followed_user.username}}">Se désabonner</a>
-        {% endfor %}
+                <th>Utilisateur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for follow in following %}
+                <tr>
+                    <td>{{ follow.followed_user.username }}</td>
+                    <td>
+                        <a href="{% url 'unfollow_user' follow.pk %}" alt="Unfollow {{follow.followed_user.username}}">Se désabonner</a>
+            {% endfor %}
+        
 
+        </table>
+    </div>
+</div>
 
-</table>
-<h3>Vos abonnés :</h3>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Utilisateur</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for follow in followers %}
-            <tr>
-                <td>{{ follow.user.username }}</td>
-        {% endfor %}
-    </tbody>
+<h2>Vos abonnés</h2>
+<div class="container">
+    <div class="row">
+        <table class="table table-striped col-md-2">
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Abonné bloqué</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for follow in followers %}
+                    <tr>
+                        <td>{{ follow.user.username }}</td>
+                        <td>{% if follow.blocked_follower %}Oui{% else %}Non{% endif %}</td>
+                            
+                        <td>
+                            {% if follow.blocked_follower %}
+                                <a href="{% url 'unblock_user' follow.pk %}" alt="Débloquer {{follow.user.username}}">Débloquer</a>
+                            {% else %}
+                                <a href="{% url 'block_user' follow.pk %}" alt="Bloquer {{follow.user.username}}">Bloquer</a>
+                            {% endif %}
+                           
+                        </td>
+                {% endfor %}
+            </tbody>
 
-</table>
-
+        </table>
+    </div>
+</div>
 
 {% endblock content %}
 

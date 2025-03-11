@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>Se désabonner de {{ followed_user.username }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>Êtes-vous sûr de vouloir vous désabonner de {{ followed_user.username }} ?</p>
+        <button class="btn btn-danger" type="submit">Se désabonner</button>
+    </form>
+
+    <a href="{% url 'subscriptions' %}">Retour</a>
+
+{% endblock content %}

@@ -8,21 +8,28 @@
     <title>{% block title %}LITRevu{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=star,home" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <!-- Bootstrap JS (optionnel si besoin de composants interactifs comme Modals, Dropdowns) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+    
+    <script src="/static/scripts/script.js" defer> </script>
 </head>
-<body>
+<body class="bg-image">
     <header>
     
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-darknavbar-expand-md navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-darknavbar-expand-md navbar-dark fixed-top bg-dark" aria-label="Main navigation">
             <div class="container-fluid">
                 <a href="#" class="navbar-brand">LITRevu</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                
             </div>
+
     {% if user.is_authenticated %}
             <div class="collapse"></div>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -35,7 +42,8 @@
                             Posts
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'ticket_create' %}">Créer un post</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ticket_create' %}">Créer un ticket</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ticket_and_review' %}">Créer un ticket avec critique</a></li>
                             <li><a class="dropdown-item" href="{% url 'posts' %}">Mes posts</a></li>
                         </ul>
                     </li>
@@ -47,8 +55,13 @@
                     </li>
                 </ul>
             </div>
-        </nav>
+            
+            
+        
     {% endif %}
+            
+    </nav>
+    <img src="/static/images/entete.png" alt="une bibliothèque" class="img-fluid" width="80%" height="auto">
     </header>
     <main>
         {% block content %}
@@ -56,6 +69,9 @@
     </main>
     <footer>
         <!-- Footer content here -->
+        <img src="/static/images/entete.png" alt="une bibliothèque" class="img-fluid" width="80%" height="auto">
     </footer>
 </body>
+
+
 </html>

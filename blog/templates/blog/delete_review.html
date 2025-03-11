@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2>Supprimer une critique</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>Êtes-vous sûr de vouloir supprimer cette critique ?</p>
+        <button class="btn btn-danger" type="submit">Supprimer</button>
+    </form>
+
+    <a href="{% url 'posts' %}">Retour</a>
+
+{% endblock content %}

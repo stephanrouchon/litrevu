@@ -1,20 +1,34 @@
+from itertools import chain
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
+from django.views.generic import ListView,DetailView, CreateView, DeleteView, UpdateView, TemplateView
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 from . import forms
-from . import models
+from .models import Ticket, Review, Photo, UserFollow
 
 User = get_user_model()
 
-@login_required
-def home(request):
-    tickets = models.Ticket.objects.all()
-    return render(request, 'blog/home.html', context={'tickets':tickets})
+class FluxView(LoginRequiredMixin, ListView):
+    template_name= 'blog/home.html'
+    context_object_name = 'page_obj'
+    paginate_by = 6
+
+    def get_queryset(self):
+        user = self.request.user
+        followed_user_ids = UserFollow.objects.filter(user=user).values_list('followed_user', flat=True)
+        tickets = Ticket.objects.filter(user__in=followed_user_ids) | Ticket.objects.filter(user=user)
+        reviews = Review.objects.filter(user__in=followed_user_ids) | Review.objects.filter(user=user)
+        posts = sorted(list(tickets) + list(reviews), key=lambda x: x.time_created, reverse=True)
+        return posts
 
 @login_required
 def post(request):
-    tickets = models.Ticket.objects.all()
+    tickets = Ticket.objects.all()
     return render(request, 'blog/tickets.html', context={'tickets':tickets})
 
 @login_required
@@ -38,9 +52,10 @@ def ticket_upload(request):
         ticket_form = forms.TicketForm(request.POST)
         photo_form = forms.PhotoForm(request.POST, request.FILES)
         if all([ticket_form.is_valid(), photo_form.is_valid()]):
-            image = photo_form.save(commit=False)
-            image.uploader = request.user
-            image.save()
+            if photo_form :
+                image = photo_form.save(commit=False)
+                image.uploader = request.user
+                image.save()
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.image = image
@@ -53,14 +68,8 @@ def ticket_upload(request):
     return render(request, 'blog/create_ticket.html', context=context)
 
 @login_required
-def view_post(request, ticket_id):
-    ticket = get_object_or_404(models.Ticket, id=ticket_id)
-    review =get_object_or_404(models.Review, ticket=ticket )
-    return render(request, 'blog/view_post.html', {'ticket':ticket, 'review':review, 'user':request.user})
-
-@login_required
-def edit_ticket(request, ticket_id):
-    ticket =  get_object_or_404(models.Ticket, id=ticket_id)
+def edit_ticket(request, pk):
+    ticket =  get_object_or_404(Ticket, id=pk)
     edit_form = forms.TicketForm(instance=ticket)
     delete_form = forms.DeleteTicketForm()
     if request.method == 'POST':
@@ -80,45 +89,29 @@ def edit_ticket(request, ticket_id):
     }
     return render(request, 'blog/edit_ticket.html', context=context)
 
-
-@login_required
-def review_create(request):
-    review_form = forms.ReviewForm()
-    if request.method =='POST':
-        review_form = forms.ReviewForm(request.POST)
-        if review_form.is_valid() :
-            review = review_form.save(commit=False)
-            review.user = request.user
-            review.save()
-            return redirect('home')
-        
-    context = {'review_form':review_form}
-    return render(request, 'blog/create_review.html', context=context)
-
 @login_required
 def follow_user(request, user_id):
     user_to_follow = get_object_or_404(User, user_id)
     if request.user != user_to_follow:
-        models.UserFollow.objects.get_or_create(user=request.user, followed_user=user_to_follow)
+        UserFollow.objects.get_or_create(user=request.user, followed_user=user_to_follow)
     return redirect('profile', user_id=user_id)
 
 @login_required
 def unfollow_user(request, user_id):
     user_to_unfollow = get_object_or_404(User, id=user_id)
-    follow = models.UserFollow.objects.get_or_create(user=request.user, followed_user=user_to_unfollow)
+    follow = UserFollow.objects.get_or_create(user=request.user, followed_user=user_to_unfollow)
     follow.delete()
     return redirect('profile', user_id=user_id)
 
-@login_required
-def subscriptions(request):
-    user = request.user
-    following = models.UserFollow.objects.filter(user=user)
-    followers = models.UserFollow.objects.filter(followed_user=user)
-    context = {
-        'following': following,
-        'followers': followers,
-    }
-    return render(request, 'blog/subscriptions.html', context=context)
+class SubscriptionsView(LoginRequiredMixin, TemplateView):
+    template_name= 'blog/subscriptions.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['following'] = UserFollow.objects.filter(user=user)
+        context['followers'] = UserFollow.objects.filter(followed_user=user)
+        return context
 
 @login_required
 def ticket_and_review(request):
@@ -150,4 +143,185 @@ def ticket_and_review(request):
                'review_form':review_form,
                }
     return render(request, 'blog/create_ticket_and_review.html', context=context)
+
+class TicketCreateView(LoginRequiredMixin, CreateView):
+    model = Ticket
+    template_name = "blog/create_ticket.html"
+    form_class = forms.TicketForm
+    success_url = reverse_lazy("home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'photo_form' not in context:
+            context['photo_form']= forms.PhotoForm
+        context["submit_text"]='Créer'
+        return context
+
+    def form_valid(self, form):
+        photo_form = forms.PhotoForm(self.request.POST, self.request.FILES)
+        
+        if photo_form.is_valid():
+            image = photo_form.save(commit=False)
+            image.uploader = self.request.user
+            image.save()
+
+            ticket= form.save(commit=False)
+            ticket.user= self.request.user
+            ticket.image= image
+            ticket.save()
+            return super().form_valid(form)
+        else:
+            ticket = form.save(commit=False)
+            ticket.user = self.request.user
+            ticket.save()
+            return super().form_valid(form)
+        
+        
+class TicketDetailView(LoginRequiredMixin, DetailView):
+    model = Ticket
+    template_name = 'blog/ticket.html'
+    context_object_name = 'ticket'
+      
     
+class TicketUpdateView(LoginRequiredMixin, UpdateView):
+    model = Ticket
+    template_name = 'Blog/create_ticket.html'
+    form_class= forms.TicketForm
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        if 'photo_form' not in context:
+            context['photo_form']= forms.PhotoForm
+        context["submit_text"]='Modifier'
+        return context
+
+
+class BlogTicketView(LoginRequiredMixin, ListView):
+    model = Ticket
+    template_name = "blog/tickets.html"
+    context_object_name = 'tickets'
+
+    def get_queryset(self):
+        return Ticket.objects.filter(user=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tickets = context['tickets']
+        reviews = Review.objects.filter(ticket__in=tickets)
+
+        reviews_by_ticket = {ticket.id:[] for ticket in tickets}
+        for review in reviews:
+            reviews_by_ticket[review.ticket.id].append(review)
+        context["reviews_by_ticket"] = reviews_by_ticket
+        return context
+    
+
+class UserPostViews(LoginRequiredMixin, ListView):
+
+    template_name = "blog/user_posts.html"
+    context_object_name = "user_posts"
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = self.request.user
+        tickets = Ticket.objects.filter(user=user)
+        reviews = Review.objects.filter(user=user)
+        user_posts = sorted(chain(tickets, reviews), key= lambda instance:instance.time_created, reverse=True)
+        return user_posts
+    
+class TicketDeleteView(LoginRequiredMixin, DeleteView):
+    model = Ticket
+    template_name = 'blog/delete_ticket.html'
+    context_object_name="ticket"
+    success_url = reverse_lazy("home")
+
+class ReviewCreateView (LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = forms.ReviewForm
+    template_name = 'blog/create_review.html'
+    success_url = reverse_lazy('home')
+    
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            form.instance.user = self.request.user
+
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["submit_text"]= "Créer"
+        return context
+
+class ReviewDetailView(LoginRequiredMixin, DetailView):
+    model = Review
+    template_name = 'blog/review.html'
+    context_object_name = "review"
+    
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    model = Review
+    form_class = forms.ReviewForm
+    template_name = "blog/create_review.html"
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["submit_text"]= "Modifier"
+        return context
+    
+
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    model = Review
+    template_name = 'blog/delete_review.html'
+    context_object_name="review"
+    success_url =reverse_lazy('home')
+
+
+class FollowDeleteView(LoginRequiredMixin, DeleteView):
+    model = UserFollow
+    template_name = 'blog/unfollow.html'
+    context_object_name = "followed_user"
+    success_url = reverse_lazy("subscriptions")
+    
+@login_required
+def search_users(request):
+    query = request.GET.get("q", "").strip()
+    following_ids = UserFollow.objects.filter(user=request.user).values_list("followed_user_id", flat=True)
+    
+    users = User.objects.exclude(id=request.user.id).exclude(id__in=following_ids)
+    
+    
+    if query:
+        users.filter(username__icontains=query)
+
+    following = UserFollow.objects.filter(user=request.user)
+    followers = UserFollow.objects.filter(followed_user=request.user)
+
+    return render(request, "blog/subscriptions.html", {'users':users, 'query':query, 'following':following, "followers": followers})
+
+@login_required
+def follow_user(request, user_id):
+    followed_user = get_object_or_404(User, id=user_id)
+    
+    if followed_user != request.user:
+        UserFollow.objects.get_or_create(user=request.user, followed_user=followed_user)
+    
+    return redirect("subscriptions")
+
+@login_required
+def block_user(request, pk):
+    follow = get_object_or_404(UserFollow, pk=pk)
+    
+    if follow.followed_user == request.user:
+        follow.blocked_follower = True
+        follow.save
+    return redirect('subscriptions')
+
+@login_required
+def unblock_user(request, pk):
+    follow = get_object_or_404(UserFollow, pk=pk)
+    
+    if follow.followed_user == request.user:
+        follow.blocked_follower = False
+        follow.save
+    return redirect('subscriptions')   

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Ticket</h1>
+      
+    <hr>
+    <section class="container">
+        
+        <div class="row">
+            <div class="col-md-6"> 
+                <p>{{ ticket.user }} a demandé une critique</p>
+                <h3>{{ ticket.title }}</h3>
+                <p>{{ ticket.description }}</p>
+                <p>{{ ticket.time_created }}</p>
+            </div>
+            <div class="col-md-6">
+                <img src="{{ ticket.image.image.url }}" class="img-thumbnail" width="200" height="200" alt="Image for {{ ticket.title }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            <a class="btn btn-primary"  href="{% url 'edit_ticket' ticket.id %}">
+                Modifier
+            </a>
+            <a class="btn btn-danger" type="dropdown-item" href="{% url 'edit_ticket' ticket.id %}">
+                supprimer
+            </a>
+        </div>
+            <hr>
+        </div>
+        
+    </section>
+{% endblock content %}

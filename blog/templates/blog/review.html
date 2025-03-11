@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Review</h1>
+      
+    <hr>
+    <section class="container">
+        
+        <div class="row">
+            <div class="col-md-6"> 
+                <p>{{ review.user }} a critiqué {{ review.ticket }}</p>
+                <h3>{{ review.title }}</h3>
+                <p>{{ review.description }}</p>
+                <p>{{ review.time_created }}</p>
+            </div>
+            <div class="col-md-6">
+                <img src="{{ review.image.image.url }}" class="img-thumbnail" width="200" height="200" alt="Image for {{ review.title }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            <a class="btn btn-primary"  href="{% url 'review_edit' review.id %}">
+                Modifier
+            </a>
+            <a class="btn btn-danger" type="dropdown-item" href="{% url 'review_delete' review.id %}">
+                supprimer
+            </a>
+        </div>
+            <hr>
+        </div>
+        
+    </section>
+{% endblock content %}

@@ -1,19 +1,123 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h1>Mes flux</h1>
+
+<hr>
 
 <a class="btn btn-danger" href="{% url 'ticket_create' %}">demander une critique</a>
 <a class="btn btn-primary" class="btn-primary" href="{% url 'ticket_and_review' %}">créer une critique</a>
-<h2>Flux</h2>
 
-{% for ticket in tickets %}
-    <h3>{{ ticket.title }}</h3>
-    <p>{{ ticket.description }}</p>
-    <p>{{ ticket.user }}</p>
-    <p>{{ ticket.time_created }}</p>
+<hr>
+
+{% for post in page_obj %}
+    {%if post.title %}
+    <div class="container">
+        <div class="row">
+        <div class="col-md-2">
+            {% if post.image and post.image.image %}
+                <img src="{{ post.image.image.url }}" class="img-thumbnail" width="200" height="200" alt="Image for {{ post.title }}">
+            {%endif%}
+        </div>  
+        <div class="col-md-10">
+            <p class="badge bg-primary">{{ post.user }} a demandé une critique</p>
+
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.description }}</p>
+            <p>{{ post.time_created }}</p>
+        </div>
+        </div>
+        {% if post.user == user %}
+        <div class="row">
+            <div class="col-md-12">
+            <a class="btn btn-primary"  href="{% url 'edit_ticket' post.id %}">
+                Modifier
+            </a>
+            <a class="btn btn-danger" type="dropdown-item" href="{% url 'ticket_delete' post.id %}">
+                supprimer
+            </a>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-12">
+            <a class="btn btn-primary"  href="{% url 'review_create' post.id %}">
+                Créer une critique
+            </a>
+        {%endif%} 
+    </div>
+    {%endif%}
+    {%if post.headline %}
+    <div class="review">
+
+    <p class="badge bg-success">{{ post.user }} a émis une critique</p>
+    <div>
+    <strong>{{ post.headline }}</strong>
+    <div class="rating">
+        {% for _ in ""|ljust:post.rating %}
+        <i class="fas fa-star"></i>
+        {% endfor %}
+
+        <!-- Afficher les étoiles vides pour compléter jusqu'à 5 -->
+        {% for _ in ""|ljust:post.empty_stars %}
+            <i class="far fa-star"></i>
+        {% endfor %}
+    </div>
     
+   
+    </div>
+    <p>{{ post.body }}</p>
+    <p>{{ post.time_created }}</p>
+    
+
+
+    {% if post.user == user %}
+    <div class="row">
+        <div class="col-md-12">
+        <a class="btn btn-primary"  href="{% url 'review_edit' post.id %}">
+            Modifier
+        </a>
+        <a class="btn btn-danger" type="dropdown-item" href="{% url 'review_delete' post.id %}">
+            supprimer
+        </a>
+    </div>
+    {%endif%}
+    <div class="downTicket">
+        <div class="col-md-2">
+        {% if post.ticket.image and post.ticket.image.image %}
+            <img src="{{ post.ticket.image.image.url }}" class="img-thumbnail" alt="Première de couverture de {{ post.ticket.title }}">
+        {%endif%}
+        </div>
+        <div class="col-md-9">
+        <p class="badge bg-primary">{{ post.ticket.user }} a demandé une critique</p>
+        <p>{{ post.ticket.time_created }}</p>
+        <strong>{{ post.ticket.title }}</strong>
+        <p>{{ post.ticket.description }}</p>
+        </div>
+        
+    </div>
+    {%endif%}
     <hr>
+    
 {% endfor %}
+
+    <div class="pagination">
+        <span>
+            {% if page_obj.has_previous %}
+                {% if page_obj.previous_page_number > 1 %}
+                    <a href="?page=1">« Première</a>
+                {% endif %}
+                <a href="?page={{ page_obj.previous_page_number }}">‹ Précédente</a>
+            {% endif %}
+            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Suivante ›</a>
+                {% if page_obj.next_page_number < page_obj.paginator.num_pages %}
+                <a href="?page={{ page_obj.paginator.num_pages }}">Dernière »</a>
+                {%endif%}
+            {% endif %}
+        </span>
+    </div>
+
 
 
 {% endblock content %}

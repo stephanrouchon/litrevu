@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Posts</h2>
+    <h1>Mes tickets</h1>
       
     <hr>
     <section class="container">
     
     {% for ticket in tickets %}
-        {% if user == ticket.user %}
+        
     
         <div class="row">
             <div class="col-md-6"> 
@@ -19,6 +19,7 @@
             <div class="col-md-6">
                 <img src="{{ ticket.image.image.url }}" class="img-thumbnail" width="200" height="200" alt="Image for {{ ticket.title }}">
             </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
             <a class="btn btn-primary"  href="{% url 'edit_ticket' ticket.id %}">
@@ -30,7 +31,8 @@
         </div>
             <hr>
         </div>
-        {% endif %}
+        
+
     {% endfor %}
     
 </section>

@@ -21,28 +21,41 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 import authentication.views
-import blog.views
+
+
+from blog.views import follow_user, block_user, photo_upload, ticket_and_review, edit_ticket, unblock_user, UserPostViews, TicketCreateView
+from blog.views import TicketDetailView, TicketUpdateView, TicketDeleteView,  FollowDeleteView, SubscriptionsView
+from blog.views import ReviewCreateView, ReviewDetailView, ReviewDeleteView, ReviewUpdateView
+from blog.views import FluxView
+from blog.views import search_users
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LoginView.as_view(
-        template_name='authentication/login.html',
-        redirect_authenticated_user = True),
+        template_name= 'authentication/login.html',
+        redirect_authenticated_user= True),
         name='login'
     ),
     path('signup/', authentication.views.signup_page, name='signup'),
     path('logout', authentication.views.logout_user, name='logout'),
-    path('home/', blog.views.home, name='home'),
-    path('photo/upload/', blog.views.photo_upload, name='photo_upload'),
-    path('posts/create', blog.views.ticket_upload, name='ticket_create'),
-    path('posts/<int:ticket_id>/edit', blog.views.edit_ticket, name='edit_ticket'),
-    path('posts/<int:ticket_id>/', blog.views.view_post, name='view_ticket'),
-    path('posts/', blog.views.post, name='posts'),
-    path('reviews/create/', blog.views.review_create, name='review_create'),
-    path('follow/<int:user_id>', blog.views.follow_user, name='follow_user'),
-    path('unfollow/<int:user_id>/', blog.views.unfollow_user, name='unfollow_user'),
-    path('subscriptions/',blog.views.subscriptions, name='subscriptions'),
-    path('postsandreview/create', blog.views.ticket_and_review, name='ticket_and_review')
+    path('home/', FluxView.as_view(), name='home'),
+    path('photo/upload/', photo_upload, name='photo_upload'),
+    path('tickets/create', TicketCreateView.as_view(), name='ticket_create'),
+    path('tickets/<int:pk>/edit', TicketUpdateView.as_view(), name='edit_ticket'),
+    path('tickets/<int:pk>/', TicketDetailView.as_view(), name='view_ticket'),
+    path('tickets/<int:pk>/delete', TicketDeleteView.as_view(), name='ticket_delete'),
+    path('reviews/<int:pk>/create/', ReviewCreateView.as_view(), name='review_create'),
+    path('reviews/<int:pk>/', ReviewDetailView.as_view(), name='view_reviews'),
+    path('reviews/<int:pk>/delete', ReviewDeleteView.as_view(), name='review_delete'),
+    path('reviews/<int:pk>/edit', ReviewUpdateView.as_view(), name='review_edit'),
+    path('follow/<int:user_id>', follow_user, name='follow_user'),
+    path('unfollow/<int:pk>/', FollowDeleteView.as_view(), name='unfollow_user'),
+    path('subscriptions/', SubscriptionsView.as_view(), name='subscriptions'),
+    path('postsandreview/create', ticket_and_review, name='ticket_and_review'),
+    path('posts/', UserPostViews.as_view(), name='posts'),
+    path("search/", search_users, name="search_users"),
+    path('block/<int:pk>', block_user, name='block_user'),
+    path('unblock/<int:pk>', unblock_user, name='unblock_user')
 ]
 
 if settings.DEBUG:

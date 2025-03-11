@@ -2,12 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    
-        <h2>Créer une critique</h2>
+    {% if submit_text == 'Créer' %}
+        <h2>Créer une critique de</h2>
+    {% else %}
+        <h2>Modifier votre critique</h2>
+    {% endif %}
         <form method="post">
-            {{ ticket_form|crispy }}
+            {{ form|crispy }}
             {% csrf_token %}
-            <button class="btn btn-primary" type="submit">Créer</button>
+            <button class="btn btn-primary" type="submit">{{ submit_text }}</button>
         </form>
     
 

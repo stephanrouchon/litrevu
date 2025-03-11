@@ -3,10 +3,13 @@
 
 {% block content %}
     
+        <h1>Créer un ticket et une critique </h1>
         <h2>Créer un ticket</h2>
         <form method="post" enctype="multipart/form-data">
             {{ ticket_form|crispy }}
             {{ photo_form|crispy }}
+            {% csrf_token %}
+            
             <h2>Créer une critique</h2>
             {{ review_form|crispy }}
             {% csrf_token %}

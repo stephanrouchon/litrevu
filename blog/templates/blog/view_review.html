@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Review</h2>
+       
+    <hr>
+    <section class="container">
+
+        {% for review in reviews %}
+        <div class="row">
+            <div class="col-md-6">
+                <p>{{ review.user }} a critiqué</p>
+                <p>{{ review.rated}}</p>
+                <h3>{{ review.headline }}</h3>
+                <p>{{ review.body }}</p>
+                <p>{{ review.time_created }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-primary"  href="{% url 'edit_review' review.id %}">
+                    Modifier
+                </a>
+                <a class="btn btn-danger" type="dropdown-item" href="{% url 'delete_review' review.id %}">
+                    supprimer
+                </a>
+            </div>
+        </div>
+        <hr>
+
+        <div>
+            <div class="col-md-6"> 
+                <p>{{ review.ticket.user }} a demandé une critique</p>
+                <h3>{{ review.ticket.title }}</h3>
+                <p>{{ review.ticket.description }}</p>
+                <p>{{ review.ticket.time_created }}</p>
+            </div>
+            <div class="col-md-6">
+                <img src="{{ review.ticket.image.image.url }}" class="img-thumbnail" width="200" height="200" alt="Image for {{ review.ticket.title }}">
+            </div>
+        </div>
+    
+{% endfor %}
+    </section>
+    
+    
+{% endblock content %}

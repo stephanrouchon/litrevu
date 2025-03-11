@@ -14,9 +14,10 @@ class Photo(models.Model):
     IMAGE_MAX_SIZE = (800,800)
 
     def resize_image(self):
-        image = Image.open(self.image)
-        image.thumbnail(self.IMAGE_MAX_SIZE)
-        image.save(self.image.path)
+        if self.image:
+            image = Image.open(self.image)
+            image.thumbnail(self.IMAGE_MAX_SIZE)
+            image.save(self.image.path)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -28,6 +29,10 @@ class Ticket(models.Model):
     description = models.TextField(max_length=2048, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+
+        return self.title
 
 
 class Review(models.Model):
@@ -41,11 +46,20 @@ class Review(models.Model):
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     time_created = models.DateTimeField(auto_now_add=True)
 
+    
+    def __str__(self):
+        return self.ticket.title
+    
+    def empty_stars(self):
+        return 5 - self.rating
+    
+
 
 class UserFollow(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='following', on_delete=models.CASCADE)
     followed_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='followers', on_delete=models.CASCADE)
-    
+    blocked_follower = models.BooleanField(default=False)
+
     class Meta:
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
