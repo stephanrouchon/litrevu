@@ -23,10 +23,10 @@ from django.conf.urls.static import static
 import authentication.views
 
 
-from blog.views import follow_user, block_user, photo_upload, ticket_and_review, edit_ticket, unblock_user, UserPostViews, TicketCreateView
+from blog.views import follow_user, block_user, photo_upload, unblock_user, UserPostViews, TicketCreateView
 from blog.views import TicketDetailView, TicketUpdateView, TicketDeleteView,  FollowDeleteView, SubscriptionsView
-from blog.views import ReviewCreateView, ReviewDetailView, ReviewDeleteView, ReviewUpdateView
-from blog.views import FluxView
+from blog.views import ReviewCreateView, ReviewDetailView, ReviewDeleteView, ReviewUpdateView, TicketAndReviewCreateView
+from blog.views import FluxView, BlockUserView, UnblockUserView
 from blog.views import search_users
 
 urlpatterns = [
@@ -51,11 +51,11 @@ urlpatterns = [
     path('follow/<int:user_id>', follow_user, name='follow_user'),
     path('unfollow/<int:pk>/', FollowDeleteView.as_view(), name='unfollow_user'),
     path('subscriptions/', SubscriptionsView.as_view(), name='subscriptions'),
-    path('postsandreview/create', ticket_and_review, name='ticket_and_review'),
+    path('postsandreview/create', TicketAndReviewCreateView.as_view(), name='ticket_and_review'),
     path('posts/', UserPostViews.as_view(), name='posts'),
     path("search/", search_users, name="search_users"),
-    path('block/<int:pk>', block_user, name='block_user'),
-    path('unblock/<int:pk>', unblock_user, name='unblock_user')
+    path('block/<int:pk>', BlockUserView.as_view(), name='block_user'),
+    path('unblock/<int:pk>', UnblockUserView.as_view(), name='unblock_user')
 ]
 
 if settings.DEBUG:

@@ -8,14 +8,17 @@ class TicketAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'user')
     search_fields = ('title', )
     list_filter = ('user',)
-    
+
+
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('headline', 'user', 'time_created')
 
+
 @admin.register(Photo)
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('image', 'uploader')
+
 
 @admin.register(UserFollow)
 class UserFollowAdmin(admin.ModelAdmin):

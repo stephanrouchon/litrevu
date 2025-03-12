@@ -6,11 +6,11 @@ from .models import Photo, Ticket, Review
 class PhotoForm(forms.ModelForm):
     class Meta:
         model = Photo
-        fields = ['image','caption']
+        fields = ['image', 'caption']
 
 
 class TicketForm(forms.ModelForm):
-   
+
     class Meta:
         model = Ticket
         fields = ['title', 'description']
@@ -20,7 +20,7 @@ class TicketForm(forms.ModelForm):
         ticket = super().save(commit=False)
         if user:
             ticket.user = user  # Associe l'utilisateur connecté
-        
+
         image_file = self.cleaned_data.get('image')
         if image_file:
             # Créer une instance de Photo et l'associer à l'utilisateur
@@ -49,11 +49,12 @@ class ReviewForm(forms.ModelForm):
         ('5', '5 ⭐⭐⭐⭐⭐ ')
     ]
 
-    rating= forms.ChoiceField(
+    rating = forms.ChoiceField(
         choices=RATING_CHOICES,
         widget=forms.RadioSelect,
         label='note'
     )
+
     class Meta:
         model = Review
-        fields= ['headline','body','rating']
+        fields = ['headline', 'body', 'rating']
