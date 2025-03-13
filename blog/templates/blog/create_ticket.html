@@ -2,20 +2,20 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-        {% if submit_text == 'Créer' %}
-            <h2>Créer un ticket</h2>
-        {% else %}
-            <h2>Modifier votre ticket</h2>
-        {% endif %}
-        <form method="post" enctype="multipart/form-data">
-            {{ form|crispy }}
-            {{ photo_form|crispy }}
-            
-            {% csrf_token %}
-            
-            <button class="btn btn-primary" type="submit">{{submit_text}}</button>
-        </form>
-    
-        <a href="{% url 'posts' %}">Retour</a>
+    {% if submit_text == 'Créer' %}
+        <h2>Créer un ticket</h2>
+    {% else %}
+        <h2>Modifier votre ticket</h2>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {{ form|crispy }}
+        {{ photo_form|crispy }}
+        
+        {% csrf_token %}
+        
+        <button class="btn btn-primary" type="submit">{{submit_text}}</button>
+    </form>
+
+    <a href="{% url 'posts' %}">Retour</a>
 
 {% endblock content %}

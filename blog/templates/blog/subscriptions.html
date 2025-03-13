@@ -12,16 +12,25 @@
     </form>
 
     {% if query %}
-        <h3>Résultats de la recherche pour "{{ query }}"</h3>
+        
         
         {% if users %}
         <div class="container">
             <div class=" row">
+                <caption><h3>Résultats de la recherche pour "{{ query }}"</h3></caption>
                 <table class="table table-striped col-md-2">
+                    <tr>
+                        <th scope="col">Utilisateur</th>
+                        <th scope="col">Actions</th>
+
+                    </tr>
+                    
                     {% for user in users %}
-                        <th>
+                        <th scope="row">
                             {{ user.username }}
-                                <a href="{% url 'follow_user' user.id %}" alt="Follow {{user.username}}">S'abonner</a>
+                        </th>
+                        <th>
+                            <a href="{% url 'follow_user' user.id %}" alt="Follow {{user.username}}">S'abonner</a>
                         </th>
                     {% endfor %}
                     </table>
@@ -32,24 +41,24 @@
         {% endif %}
     {% endif %}
 
-
-
-  <h2>Vos abonnements</h2>
+  
   <div class="container">
     <div class="row">
+        <caption><h2>Vos abonnements</h2></caption>
         <table class="table table-striped col-md-2">
         <thead>
             <tr>
-                <th>Utilisateur</th>
-                <th>Actions</th>
+                <th scope="col">Utilisateur</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for follow in following %}
                 <tr>
-                    <td>{{ follow.followed_user.username }}</td>
+                    <th scope="row">{{ follow.followed_user.username }}</td>
                     <td>
                         <a href="{% url 'unfollow_user' follow.pk %}" alt="Unfollow {{follow.followed_user.username}}">Se désabonner</a>
+                    </td>
             {% endfor %}
         
 
@@ -57,21 +66,21 @@
     </div>
 </div>
 
-<h2>Vos abonnés</h2>
 <div class="container">
     <div class="row">
+        <caption><h2>Vos Abonnés</h2></caption>
         <table class="table table-striped col-md-2">
             <thead>
                 <tr>
-                    <th>Utilisateur</th>
-                    <th>Abonné bloqué</th>
-                    <th>Action</th>
+                    <th scope="col">Utilisateur</th>
+                    <th scope="col">Abonné bloqué</th>
+                    <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for follow in followers %}
                     <tr>
-                        <td>{{ follow.user.username }}</td>
+                        <th scope="row">{{ follow.user.username }}</td>
                         <td>{% if follow.blocked_follower %}Oui{% else %}Non{% endif %}</td>
                             
                         <td>

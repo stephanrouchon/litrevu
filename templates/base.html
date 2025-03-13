@@ -21,9 +21,9 @@
 <body class="bg-image">
     <header>
     
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-darknavbar-expand-md navbar-dark fixed-top bg-dark" aria-label="Main navigation">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-darknavbar-expand-md navbar-dark fixed-top bg-dark" role="navigation" aria-label="Main navigation">
             <div class="container-fluid">
-                <a href="#" class="navbar-brand">LITRevu</a>
+                <a href="{% url 'home' %}" class="navbar-brand">LITRevu</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -35,23 +35,23 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">Flux</a>
+                        <a class="nav-link active" href="{% url 'home' %}" role="menuitem">Flux</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle show" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Toggle navigation" role="menuitem">
                             Posts
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'ticket_create' %}">Créer un ticket</a></li>
-                            <li><a class="dropdown-item" href="{% url 'ticket_and_review' %}">Créer un ticket avec critique</a></li>
-                            <li><a class="dropdown-item" href="{% url 'posts' %}">Mes posts</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ticket_create' %}" role="menuitem">Créer un ticket</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ticket_and_review' %}" role="menuitem">Créer un ticket avec critique</a></li>
+                            <li><a class="dropdown-item" href="{% url 'posts' %}" role="menuitem">Mes posts</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'subscriptions'%}">Abonnements</a>
+                        <a class="nav-link" href="{% url 'subscriptions'%}" role="menuitem">Abonnements</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Se deconnecter</a>
+                        <a class="nav-link" href="{% url 'logout' %}" role="menuitem">Se deconnecter</a>
                     </li>
                 </ul>
             </div>
@@ -69,7 +69,7 @@
     </main>
     <footer>
         <!-- Footer content here -->
-        <img src="/static/images/entete.png" alt="une bibliothèque" class="img-fluid" width="80%" height="auto">
+        
     </footer>
 </body>
 
