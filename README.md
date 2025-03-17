@@ -16,13 +16,13 @@ application développé sous Django
     ```python
     python -m venv env
 
-3a. activez l'environnement virtuel
-    sur macOS/Linux : 
-    ```python
+3. activez l'environnement virtuel
+a. sur macOS/Linux : 
+    ```sh
     source env/bin/activate
     
-3b. sur windows
-    ```python
+b. sur windows
+    ```sh
 .\env\Scripts\activate
 
 4. Installez les dépendances
