@@ -7,25 +7,25 @@ Application web de publication de d'échange de critiques de livres ou d'article
 
 application développé sous Django
 
-1) Clonez le dépôt GIT :
+1. Clonez le dépôt GIT :
     ```sh
     https://github.com/stephanrouchon/litrevu.git
     cd litrevu
 
-2) creez un environnement virtuel :
+2. creez un environnement virtuel :
     ```sh
     python -m venv env
 
-3) activez l'environnement virtuel
-    sur macOS/Linux : 
+3. activez l'environnement virtuel
+sur macOS/Linux : 
     ```sh
-    source env/bin/activate
+source env/bin/activate
     ```sh
 
     sur windows : .\env\Scripts\activate
 
-4) Installez les dépendances
-    ```sh
+4. Installez les dépendances
+   ```sh
    pip install -r requirements.txt
 
 Configuration
@@ -37,18 +37,19 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 
 Appliquez les migrations de la base de données :
-```sh
+    ```sh
     python manage.py migrate
 
 Créez un superutilisateur pour accéder à l'interface d'administration :
-python manage.py createsuperuser
+    '''sh
+    python manage.py createsuperuser
 
 Utilisation :
 Lancez le serveur de développement :
-python manage.py runserver
+    '''sh
+    python manage.py runserver
 
 Accedez à l'application dans votre navigateur à l'adresse suivante :
-
 
 http://127.0.0.1:8000
 
