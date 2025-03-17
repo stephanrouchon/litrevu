@@ -19,11 +19,10 @@ application développé sous Django
 3. activez l'environnement virtuel
 sur macOS/Linux : 
     ```sh
-source env/bin/activate
+    source env/bin/activate
     
-
 sur windows : 
-    '''sh
+    ```sh
     .\env\Scripts\activate
 
 4. Installez les dépendances
@@ -43,12 +42,12 @@ Appliquez les migrations de la base de données :
     python manage.py migrate
 
 Créez un superutilisateur pour accéder à l'interface d'administration :
-    '''sh
+    ```sh
     python manage.py createsuperuser
 
 Utilisation :
 Lancez le serveur de développement :
-    '''sh
+    ```sh
     python manage.py runserver
 
 Accedez à l'application dans votre navigateur à l'adresse suivante :
