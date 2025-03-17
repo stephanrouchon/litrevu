@@ -22,7 +22,7 @@ sur macOS/Linux :
     source env/bin/activate
     
 sur windows :
-    ```sh
+```sh
 .\env\Scripts\activate
 
 4. Installez les dépendances
@@ -62,4 +62,4 @@ Blocage et déblocage des utilisateurs
 
 
 Licence
-Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
+Ce projet est sous licence MIT.
