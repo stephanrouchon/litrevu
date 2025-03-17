@@ -31,11 +31,11 @@ sur windows :
 
 Configuration
 
-Créer un fichier env à la racine du projet 
+Créer un fichier env à la racine du projet avec les élements suivants
 
-SECRET_KEY=your_secret_key
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
+    SECRET_KEY=your_secret_key
+    DEBUG=True
+    ALLOWED_HOSTS= [localhost,127.0.0.1]
 
 Appliquez les migrations de la base de données :
     ```sh
