@@ -21,7 +21,7 @@ sur macOS/Linux :
     ```sh
     source env/bin/activate
     
-sur windows : 
+sur windows :
     ```sh
     .\env\Scripts\activate
 
@@ -38,16 +38,16 @@ Créer un fichier env à la racine du projet avec les élements suivants
     ALLOWED_HOSTS= [localhost,127.0.0.1]
 
 Appliquez les migrations de la base de données :
-    ```sh
+```sh
     python manage.py migrate
 
 Créez un superutilisateur pour accéder à l'interface d'administration :
-    ```sh
+```sh
     python manage.py createsuperuser
 
 Utilisation :
 Lancez le serveur de développement :
-    ```sh
+```sh
     python manage.py runserver
 
 Accedez à l'application dans votre navigateur à l'adresse suivante :
