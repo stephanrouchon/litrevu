@@ -19,11 +19,11 @@ application développé sous Django
 3a. activez l'environnement virtuel
     sur macOS/Linux : 
     ```sh
-    source env/bin/activate
+source env/bin/activate
     
 3b. sur windows :
     ```sh
-    .\env\Scripts\activate
+.\env\Scripts\activate
 
 4. Installez les dépendances
    ```sh
