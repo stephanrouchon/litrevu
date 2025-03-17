@@ -21,7 +21,7 @@ application développé sous Django
     ```python
     source env/bin/activate
     
-3b. sur windows :
+3b. sur windows
     ```python
 .\env\Scripts\activate
 
