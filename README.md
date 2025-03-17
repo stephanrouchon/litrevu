@@ -26,7 +26,7 @@ b. sur windows
 .\env\Scripts\activate
 
 4. Installez les dépendances
-   ```sh
+    ```sh
    pip install -r requirements.txt
 
 Configuration
