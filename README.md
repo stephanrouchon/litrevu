@@ -31,22 +31,22 @@ sur windows :
 
 Configuration
 
-Créer un fichier env à la racine du projet avec les élements suivants
+5. Créer un fichier env à la racine du projet avec les élements suivants
 
     SECRET_KEY=your_secret_key
     DEBUG=True
     ALLOWED_HOSTS= [localhost,127.0.0.1]
 
-Appliquez les migrations de la base de données :
+6. Appliquez les migrations de la base de données :
 ```sh
     python manage.py migrate
 
-Créez un superutilisateur pour accéder à l'interface d'administration :
+7. Créez un superutilisateur pour accéder à l'interface d'administration :
 ```sh
     python manage.py createsuperuser
 
 Utilisation :
-Lancez le serveur de développement :
+8. Lancez le serveur de développement :
 ```sh
     python manage.py runserver
 
