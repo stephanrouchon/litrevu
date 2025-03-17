@@ -22,8 +22,8 @@ sur macOS/Linux :
     source env/bin/activate
     
 sur windows :
-```sh
-.\env\Scripts\activate
+    ```sh
+    .\env\Scripts\activate
 
 4. Installez les dépendances
    ```sh
