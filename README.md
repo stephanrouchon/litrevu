@@ -7,16 +7,16 @@ Application web de publication de d'échange de critiques de livres ou d'article
 
 application développé sous Django
 
-1) Clonez le dépôt GIT :
+1. Clonez le dépôt GIT :
     ```sh
     https://github.com/stephanrouchon/litrevu.git
     cd litrevu
 
-2) creez un environnement virtuel :
+2. creez un environnement virtuel :
     ```sh
     python -m venv env
 
-3) activez l'environnement virtuel
+3. activez l'environnement virtuel
     sur macOS/Linux : 
     ```sh
     source env/bin/activate
@@ -24,7 +24,7 @@ application développé sous Django
 
     sur windows : .\env\Scripts\activate
 
-4) Installez les dépendances
+4. Installez les dépendances
     ```sh
    pip install -r requirements.txt
 
