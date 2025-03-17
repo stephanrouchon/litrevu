@@ -16,12 +16,12 @@ application développé sous Django
     ```sh
     python -m venv env
 
-3. activez l'environnement virtuel
-sur macOS/Linux : 
+3a. activez l'environnement virtuel
+    sur macOS/Linux : 
     ```sh
     source env/bin/activate
     
-sur windows :
+3b. sur windows :
     ```sh
     .\env\Scripts\activate
 
