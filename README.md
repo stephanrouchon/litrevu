@@ -45,12 +45,12 @@ Configuration
     ```sh
     python manage.py createsuperuser
 
-Utilisation :
-8. Lancez le serveur de développement :
+Utilisation
+8. Lancez le serveur de développement 
     ```sh
     python manage.py runserver
 
-Accedez à l'application dans votre navigateur à l'adresse suivante :
+Accedez à l'application dans votre navigateur à l'adresse suivante
 
 http://127.0.0.1:8000
 
