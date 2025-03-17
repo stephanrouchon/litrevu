@@ -4,6 +4,7 @@ from django.db import models
 from PIL import Image
 
 
+
 class Photo(models.Model):
     image = models.ImageField(blank=True, null=True)
     caption = models.CharField(max_length=128, blank=True, null=True)
