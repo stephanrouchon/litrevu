@@ -23,12 +23,16 @@ class FluxView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
+        # permet d'obtenir les utilisateurs suivis 
         followed_user_ids = UserFollow.objects.filter(
             user=user).values_list('followed_user', flat=True)
+        # exclue les publications des utilisateurs qui ont bloqué l'utilisateur actuel
+        blocking_user_ids = UserFollow.objects.filter(followed_user=user, blocked_follower=True).values_list('user',flat=True)
+
         tickets = Ticket.objects.filter(
-            user__in=followed_user_ids) | Ticket.objects.filter(user=user)
+            user__in=followed_user_ids).exclude(user__in=blocking_user_ids) | Ticket.objects.filter(user=user)
         reviews = Review.objects.filter(
-            user__in=followed_user_ids) | Review.objects.filter(user=user)
+            user__in=followed_user_ids).exclude(user__in=blocking_user_ids) | Review.objects.filter(user=user)
         posts = sorted(list(tickets) + list(reviews),
                        key=lambda x: x.time_created, reverse=True)
         return posts
@@ -69,7 +73,7 @@ def ticket_upload(request):
             ticket.user = request.user
             ticket.image = image
             ticket.save()
-            return redirect('posts')
+            return redirect('home')
 
     context = {'ticket_form': ticket_form,
                'photo_form': photo_form,
