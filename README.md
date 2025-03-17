@@ -13,16 +13,16 @@ application développé sous Django
     cd litrevu
 
 2. creez un environnement virtuel :
-    ```sh
+    ```python
     python -m venv env
 
 3a. activez l'environnement virtuel
     sur macOS/Linux : 
-    ```sh
-source env/bin/activate
+    ```python
+    source env/bin/activate
     
 3b. sur windows :
-    ```sh
+    ```python
 .\env\Scripts\activate
 
 4. Installez les dépendances
