@@ -23,7 +23,7 @@ sur macOS/Linux :
     
 sur windows :
     ```sh
-    .\env\Scripts\activate
+.\env\Scripts\activate
 
 4. Installez les dépendances
    ```sh
@@ -38,16 +38,16 @@ Configuration
     ALLOWED_HOSTS= [localhost,127.0.0.1]
 
 6. Appliquez les migrations de la base de données :
-```sh
+    ```sh
     python manage.py migrate
 
 7. Créez un superutilisateur pour accéder à l'interface d'administration :
-```sh
+    ```sh
     python manage.py createsuperuser
 
 Utilisation :
 8. Lancez le serveur de développement :
-```sh
+    ```sh
     python manage.py runserver
 
 Accedez à l'application dans votre navigateur à l'adresse suivante :
