@@ -196,13 +196,19 @@ class ReviewCreateView (LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        if self.request.user.is_authenticated:
-            form.instance.user = self.request.user
+        ticket_id = self.kwargs.get('pk')
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        form.instance.user = self.request.user
+        form.instance.ticket = ticket
 
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
+        ticket_id = self.kwargs.get('pk')
+        ticket = get_object_or_404(Ticket, id=ticket_id)
+        context['ticket'] = ticket
         context["submit_text"] = "Créer"
         return context
 
@@ -221,6 +227,8 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        review = self.get_object()
+        context['ticket']= review.ticket
         context["submit_text"] = "Modifier"
         return context
 

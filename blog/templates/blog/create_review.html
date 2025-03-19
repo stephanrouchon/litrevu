@@ -2,11 +2,32 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    {% if submit_text == 'Créer' %}
-        <h2>Créer une critique de</h2>
-    {% else %}
-        <h2>Modifier votre critique</h2>
-    {% endif %}
+    
+        <h2>{% if submit_text == 'Créer' %}
+            Créer une 
+            {% else %}
+            Modifier votre
+            {% endif %} 
+            critique
+        </h2>
+        <hr><p> Vous êtes en train de poster en réponse à </p>
+        <div class="downTicket">
+            
+            <div class="row">
+                <div class="col-md-2">
+                    {% if ticket.image and ticket.image.image %}
+                        <img src="{{ ticket.image.image.url }}" class="img-thumbnail" width="200" height="200" alt="Image pour {{ ticket.title }}">
+                    {%endif%}
+                </div>  
+                <div class="col-md-10">
+                    <h2>{{ ticket.title }}</h2>
+                    <p>{{ ticket.description }}</p>
+                    <p>Posté par {{ ticket.user.username }} le {{ ticket.time_created }}</p>
+                </div>
+            </div>
+        </div>
+    
+    
         <form method="post">
             {{ form|crispy }}
             {% csrf_token %}
