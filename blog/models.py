@@ -4,8 +4,8 @@ from django.db import models
 from PIL import Image
 
 
-
 class Photo(models.Model):
+    """Permet """
     image = models.ImageField(blank=True, null=True)
     caption = models.CharField(max_length=128, blank=True, null=True)
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -26,6 +26,7 @@ class Photo(models.Model):
 
 
 class Ticket(models.Model):
+    """ un ticket est une demande de critique d'une publication """
     image = models.ForeignKey(Photo,
                               null=True,
                               on_delete=models.SET_NULL,
@@ -43,6 +44,8 @@ class Ticket(models.Model):
 
 
 class Review(models.Model):
+    """ Une Review est une reponse d'une demande de critique
+      faite par un utisateur"""
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(
         # validates that rating must be between 0 and 5
@@ -61,6 +64,7 @@ class Review(models.Model):
 
 
 class UserFollow(models.Model):
+    """ Créer les relations utilisateur et utilisateur suivi """
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              related_name='following',
                              on_delete=models.CASCADE
@@ -72,6 +76,5 @@ class UserFollow(models.Model):
     blocked_follower = models.BooleanField(default=False)
 
     class Meta:
-        # ensures we don't get multiple UserFollows instances
-        # for unique user-user_followed pairs
+        # verifie que les pairs sont uniques
         unique_together = ('user', 'followed_user', )

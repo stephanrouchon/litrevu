@@ -17,31 +17,31 @@ User = get_user_model()
 
 
 class FluxView(LoginRequiredMixin, ListView):
+    """ Genere la vue de la page Flux """
     template_name = 'blog/home.html'
     context_object_name = 'page_obj'
     paginate_by = 6
 
     def get_queryset(self):
         user = self.request.user
-        # permet d'obtenir les utilisateurs suivis 
+        # permet d'obtenir les utilisateurs suivis
         followed_user_ids = UserFollow.objects.filter(
             user=user).values_list('followed_user', flat=True)
-        # exclue les publications des utilisateurs qui ont bloqué l'utilisateur actuel
-        blocking_user_ids = UserFollow.objects.filter(followed_user=user, blocked_follower=True).values_list('user',flat=True)
+        # exclue les publications des utilisateurs
+        # qui ont bloqué l'utilisateur actuel
+        blocking_user_ids = UserFollow.objects.filter(
+            followed_user=user, blocked_follower=True).values_list(
+                'user', flat=True)
 
         tickets = Ticket.objects.filter(
-            user__in=followed_user_ids).exclude(user__in=blocking_user_ids) | Ticket.objects.filter(user=user)
+            user__in=followed_user_ids).exclude(
+                user__in=blocking_user_ids) | Ticket.objects.filter(user=user)
         reviews = Review.objects.filter(
-            user__in=followed_user_ids).exclude(user__in=blocking_user_ids) | Review.objects.filter(user=user)
+            user__in=followed_user_ids).exclude(
+                user__in=blocking_user_ids) | Review.objects.filter(user=user)
         posts = sorted(list(tickets) + list(reviews),
                        key=lambda x: x.time_created, reverse=True)
         return posts
-
-
-@login_required
-def post(request):
-    tickets = Ticket.objects.all()
-    return render(request, 'blog/tickets.html', context={'tickets': tickets})
 
 
 @login_required
@@ -82,6 +82,7 @@ def ticket_upload(request):
 
 
 class SubscriptionsView(LoginRequiredMixin, TemplateView):
+    """ genere la vue des abonnements """
 
     template_name = 'blog/subscriptions.html'
 
@@ -94,6 +95,7 @@ class SubscriptionsView(LoginRequiredMixin, TemplateView):
 
 
 class TicketCreateView(LoginRequiredMixin, CreateView):
+    """ genere la vue de la création d'une demande de critique """
     model = Ticket
     template_name = "blog/create_ticket.html"
     form_class = forms.TicketForm
@@ -127,12 +129,14 @@ class TicketCreateView(LoginRequiredMixin, CreateView):
 
 
 class TicketDetailView(LoginRequiredMixin, DetailView):
+    """ genere l'affichage d'un ticket séparemment """
     model = Ticket
     template_name = 'blog/ticket.html'
     context_object_name = 'ticket'
 
 
 class TicketUpdateView(LoginRequiredMixin, UpdateView):
+    """ genere la vue pour modifier une demande de critique """
     model = Ticket
     template_name = 'Blog/create_ticket.html'
     form_class = forms.TicketForm
@@ -146,27 +150,8 @@ class TicketUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-class BlogTicketView(LoginRequiredMixin, ListView):
-    model = Ticket
-    template_name = "blog/tickets.html"
-    context_object_name = 'tickets'
-
-    def get_queryset(self):
-        return Ticket.objects.filter(user=self.request.user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        tickets = context['tickets']
-        reviews = Review.objects.filter(ticket__in=tickets)
-
-        reviews_by_ticket = {ticket.id: [] for ticket in tickets}
-        for review in reviews:
-            reviews_by_ticket[review.ticket.id].append(review)
-        context["reviews_by_ticket"] = reviews_by_ticket
-        return context
-
-
 class UserPostViews(LoginRequiredMixin, ListView):
+    """ affiche uniquement les posts et reviwew de l'utilisateur """
 
     template_name = "blog/user_posts.html"
     context_object_name = "user_posts"
@@ -183,6 +168,7 @@ class UserPostViews(LoginRequiredMixin, ListView):
 
 
 class TicketDeleteView(LoginRequiredMixin, DeleteView):
+    """ Gestion de la suppression d'une demande de critique"""
     model = Ticket
     template_name = 'blog/delete_ticket.html'
     context_object_name = "ticket"
@@ -190,6 +176,7 @@ class TicketDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class ReviewCreateView (LoginRequiredMixin, CreateView):
+    """ Gestion de la création d'une critique """
     model = Review
     form_class = forms.ReviewForm
     template_name = 'blog/create_review.html'
@@ -214,12 +201,14 @@ class ReviewCreateView (LoginRequiredMixin, CreateView):
 
 
 class ReviewDetailView(LoginRequiredMixin, DetailView):
+    """ permet d'afficher la vue d'une seul critique """
     model = Review
     template_name = 'blog/review.html'
     context_object_name = "review"
 
 
 class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    """ Modification d'une critique """
     model = Review
     form_class = forms.ReviewForm
     template_name = "blog/create_review.html"
@@ -228,12 +217,13 @@ class ReviewUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         review = self.get_object()
-        context['ticket']= review.ticket
+        context['ticket'] = review.ticket
         context["submit_text"] = "Modifier"
         return context
 
 
 class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    """ Suppression d'une critique """
     model = Review
     template_name = 'blog/delete_review.html'
     context_object_name = "review"
@@ -241,6 +231,7 @@ class ReviewDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class FollowDeleteView(LoginRequiredMixin, DeleteView):
+    """ Suppression d'un abonnement """
     model = UserFollow
     template_name = 'blog/unfollow.html'
     context_object_name = "followed_user"
@@ -248,6 +239,9 @@ class FollowDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class TicketAndReviewCreateView(LoginRequiredMixin, FormView):
+    """ Création simultanée d'une demande de critique
+    et de la critique
+    """
     template_name = 'blog/create_ticket_and_review.html'
     success_url = reverse_lazy('posts')
     form_class = forms.TicketForm
@@ -286,15 +280,18 @@ class TicketAndReviewCreateView(LoginRequiredMixin, FormView):
 
 @login_required
 def search_users(request):
-    query = request.GET.get("q", "").strip()
+    """ recherche d'utilisateur pour s'abonner """
+    query = request.GET.get("q")
+
+    # On exclue la liste des utilisateurs trouvés les abonnements déjà souscrit
     following_ids = UserFollow.objects.filter(
         user=request.user).values_list("followed_user_id", flat=True)
 
     users = User.objects.exclude(
         id=request.user.id).exclude(id__in=following_ids)
 
-    if query:
-        users.filter(username__icontains=query)
+    # si il y a une recherche on filtre ceux dont le nom contient la recherche
+    users = users.filter(username__icontains=query)
 
     following = UserFollow.objects.filter(user=request.user)
     followers = UserFollow.objects.filter(followed_user=request.user)
@@ -308,6 +305,7 @@ def search_users(request):
 
 @login_required
 def follow_user(request, user_id):
+    """ création d'un abonnement à un compte """
     user_to_follow = get_object_or_404(User, id=user_id)
     if request.user != user_to_follow:
         UserFollow.objects.get_or_create(
@@ -317,6 +315,7 @@ def follow_user(request, user_id):
 
 @login_required
 def unfollow_user(request, user_id):
+    """ désabonnement d'un utilisateur """
     user_to_unfollow = get_object_or_404(User, id=user_id)
     follow = UserFollow.objects.filter(
         user=request.user, followed_user=user_to_unfollow).first()
@@ -325,26 +324,10 @@ def unfollow_user(request, user_id):
     return redirect('subscriptions')
 
 
-@login_required
-def block_user(request, pk):
-    follow = get_object_or_404(UserFollow, pk=pk)
-
-    if follow.followed_user == request.user:
-        follow.blocked_follower = True
-        follow.save
-    return redirect('subscriptions')
-
-
-@login_required
-def unblock_user(request, pk):
-    follow = get_object_or_404(UserFollow, pk=pk)
-
-    if follow.followed_user == request.user:
-        follow.blocked_follower = False
-        follow.save
-    return redirect('subscriptions')
-
 class BlockUserView(LoginRequiredMixin, View):
+    """ Bloque un utilisateur pour pouvoir lui empecher
+    de voir les publication de l'utisateur courant """
+
     def get(self, request, pk, *args, **kwargs):
         follow = get_object_or_404(UserFollow, pk=pk)
         if follow.followed_user == request.user:
@@ -352,7 +335,10 @@ class BlockUserView(LoginRequiredMixin, View):
             follow.save()
         return HttpResponseRedirect(reverse_lazy('subscriptions'))
 
+
 class UnblockUserView(LoginRequiredMixin, View):
+    """ Débloque un utilisateur pour lui permettre de voir
+      les publications de l'utilisateur """
     def get(self, request, pk, *args, **kwargs):
         follow = get_object_or_404(UserFollow, pk=pk)
         if follow.followed_user == request.user:

@@ -26,13 +26,19 @@
                     </tr>
                     
                     {% for user in users %}
-                        <th scope="row">
-                            {{ user.username }}
-                        </th>
-                        <th>
-                            <a href="{% url 'follow_user' user.id %}" alt="Follow {{user.username}}">S'abonner</a>
-                        </th>
+                        
+                        
+                            <tr>
+                                <th scope="row">
+                                    {{ user.username }}
+                                </th>
+                                <th>
+                                    <a href="{% url 'follow_user' user.id %}" alt="Follow {{user.username}}">S'abonner</a>
+                                </th>
+                            </tr>
+                        
                     {% endfor %}
+                    
                     </table>
             </div>
         </div>

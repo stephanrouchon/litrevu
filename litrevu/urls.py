@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 import authentication.views
 
 
-from blog.views import follow_user, block_user, photo_upload, unblock_user, UserPostViews, TicketCreateView
+from blog.views import follow_user, photo_upload, UserPostViews, TicketCreateView
 from blog.views import TicketDetailView, TicketUpdateView, TicketDeleteView,  FollowDeleteView, SubscriptionsView
 from blog.views import ReviewCreateView, ReviewDetailView, ReviewDeleteView, ReviewUpdateView, TicketAndReviewCreateView
 from blog.views import FluxView, BlockUserView, UnblockUserView
