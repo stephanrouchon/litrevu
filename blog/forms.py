@@ -7,6 +7,9 @@ class PhotoForm(forms.ModelForm):
     class Meta:
         model = Photo
         fields = ['image', 'caption']
+        labels = {
+            'caption': "Description de l'image"
+        }
 
 
 class TicketForm(forms.ModelForm):
@@ -14,6 +17,11 @@ class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ['title', 'description']
+        labels = {
+            'title': 'Titre',
+            'description': 'Description',
+            'caption': "Description de l'image",
+        }
 
     def save(self, commit=True, user=None):
         """Sauvegarde le ticket et la photo associée"""
@@ -58,3 +66,7 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['headline', 'body', 'rating']
+        labels = {
+            'headline': 'Titre',
+            'body': 'Commentaire'
+        }
